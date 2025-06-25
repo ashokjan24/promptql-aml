@@ -1,0 +1,131 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: accounts_contact_information
+  description: |
+    Stores customer contact details including address, email, and phone number.
+    Used to support KYC, identity verification, and investigative communication.
+  fields:
+    - name: address
+      type: String
+      description: "Registered address of the account holder (residential or business)."
+    - name: email
+      type: String
+      description: "Primary email address associated with the account."
+    - name: phone_number
+      type: String
+      description: "Primary phone number for contacting the account holder."
+  graphql:
+    typeName: accounts_contact_information
+    inputTypeName: accounts_contact_information_input
+  dataConnectorTypeMapping:
+    - dataConnectorName: aml_mongo
+      dataConnectorObjectType: accounts_contact_information
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: accounts_contact_information
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - address
+          - email
+          - phone_number
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: accounts_transaction_limits
+  description: |
+    Captures transaction constraints for an account to detect threshold breaches.
+    Used in flagging high-volume or high-value behavior, often linked to structuring.
+  fields:
+    - name: max_num_transactions
+      type: Int
+      description: |
+        Maximum number of transactions allowed for this account in a specified monitoring window.
+    - name: max_transaction_limit
+      type: Int
+      description: |
+        Maximum allowed value per transaction for this account.
+  graphql:
+    typeName: accounts_transaction_limits
+    inputTypeName: accounts_transaction_limits_input
+  dataConnectorTypeMapping:
+    - dataConnectorName: aml_mongo
+      dataConnectorObjectType: accounts_transaction_limits
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: accounts_transaction_limits
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - max_num_transactions
+          - max_transaction_limit
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: accounts
+  description: |
+    Primary entity storing account-level metadata including owner identity,
+    risk classification, contact details, and transactional limits. 
+    Used by AML systems to assess risk and investigate flagged activity.
+  fields:
+    - name: _id
+      type: string!
+      description: "MongoDB internal object ID for the account document."
+    - name: account_id
+      type: Int
+      description: "Bank-assigned unique account number or reference ID."
+    - name: contact_information
+      type: accounts_contact_information
+      description: "Nested object storing address, email, and phone number of the account holder."
+    - name: entity_type
+      type: String
+      description: |
+        Type of account ownership. Common values include: 'Individual', 'Business', 'NGO'.
+    - name: name
+      type: String
+      description: "Name of the account holder (individual or organization)."
+    - name: risk
+      type: String
+      description: |
+        Risk rating assigned to the account for AML purposes. Expected values: Low, Medium, High.
+        Higher values may require additional scrutiny or transaction monitoring.
+    - name: transaction_limits
+      type: accounts_transaction_limits
+      description: "Nested object containing volume and value thresholds for transaction monitoring."
+  graphql:
+    typeName: accounts
+    inputTypeName: accounts_input
+  dataConnectorTypeMapping:
+    - dataConnectorName: aml_mongo
+      dataConnectorObjectType: accounts
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: accounts
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - _id
+          - account_id
+          - contact_information
+          - entity_type
+          - name
+          - risk
+          - transaction_limits

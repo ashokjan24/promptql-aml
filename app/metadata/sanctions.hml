@@ -1,0 +1,178 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: sanctions
+  description: Stores entities and individuals listed under financial sanctions programs, including key identifying details and listing metadata.
+  fields:
+    - name: _id
+      type: String!
+      description: Unique identifier for the sanctions record.
+    - name: address
+      type: String
+      description: Known address of the sanctioned entity or individual.
+    - name: entity_name
+      type: String
+      description: Full name of the sanctioned entity or individual.
+    - name: entity_type
+      type: String
+      description: Classification of the entity (e.g., individual, organization).
+    - name: list_type
+      type: String
+      description: Type of sanctions list (e.g., OFAC, UN, EU).
+    - name: listed_date
+      type: String
+      description: Date when the entity was added to the sanctions list.
+    - name: program
+      type: String
+      description: Name of the sanctions program under which the entity is listed (e.g., SDN, NPWMD).
+  graphql:
+    typeName: sanctions
+    inputTypeName: sanctions_input
+  dataConnectorTypeMapping:
+    - dataConnectorName: aml_mongo
+      dataConnectorObjectType: sanctions
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: sanctions
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - _id
+          - address
+          - entity_name
+          - entity_type
+          - list_type
+          - listed_date
+          - program
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: sanctions_bool_exp
+  operand:
+    object:
+      type: sanctions
+      comparableFields:
+        - fieldName: _id
+          booleanExpressionType: String_bool_exp
+        - fieldName: address
+          booleanExpressionType: String_bool_exp
+        - fieldName: entity_name
+          booleanExpressionType: String_bool_exp
+        - fieldName: entity_type
+          booleanExpressionType: String_bool_exp
+        - fieldName: list_type
+          booleanExpressionType: String_bool_exp
+        - fieldName: listed_date
+          booleanExpressionType: String_bool_exp
+        - fieldName: program
+          booleanExpressionType: String_bool_exp
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: sanctions_bool_exp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: sanctions_agg_exp
+  operand:
+    object:
+      aggregatedType: sanctions
+      aggregatableFields:
+        - fieldName: _id
+          aggregateExpression: String_agg_exp
+        - fieldName: address
+          aggregateExpression: String_agg_exp
+        - fieldName: entity_name
+          aggregateExpression: String_agg_exp
+        - fieldName: entity_type
+          aggregateExpression: String_agg_exp
+        - fieldName: list_type
+          aggregateExpression: String_agg_exp
+        - fieldName: listed_date
+          aggregateExpression: String_agg_exp
+        - fieldName: program
+          aggregateExpression: String_agg_exp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: sanctions_agg_exp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: sanctions_order_by_exp
+  operand:
+    object:
+      orderedType: sanctions
+      orderableFields:
+        - fieldName: _id
+          orderByExpression: String_order_by_exp
+        - fieldName: address
+          orderByExpression: String_order_by_exp
+        - fieldName: entity_name
+          orderByExpression: String_order_by_exp
+        - fieldName: entity_type
+          orderByExpression: String_order_by_exp
+        - fieldName: list_type
+          orderByExpression: String_order_by_exp
+        - fieldName: listed_date
+          orderByExpression: String_order_by_exp
+        - fieldName: program
+          orderByExpression: String_order_by_exp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: sanctions_order_by_exp
+
+---
+kind: Model
+version: v2
+definition:
+  name: sanctions
+  objectType: sanctions
+  source:
+    dataConnectorName: aml_mongo
+    collection: sanctions
+  filterExpressionType: sanctions_bool_exp
+  aggregateExpression: sanctions_agg_exp
+  orderByExpression: sanctions_order_by_exp
+  graphql:
+    selectMany:
+      queryRootField: sanctions
+      subscription:
+        rootField: sanctions
+    selectUniques:
+      - queryRootField: sanctions_by__id
+        uniqueIdentifier:
+          - _id
+        subscription:
+          rootField: sanctions_by__id
+    filterInputTypeName: sanctions_filter_input
+    aggregate:
+      queryRootField: sanctions_aggregate
+      subscription:
+        rootField: sanctions_aggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: sanctions
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

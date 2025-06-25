@@ -1,0 +1,27 @@
+kind: Subgraph
+version: v2
+definition:
+  name: app
+  generator:
+    rootPath: .
+    namingConvention: none
+  includePaths:
+    - metadata
+  envMapping:
+    APP_AML_MONGO_AUTHORIZATION_HEADER:
+      fromEnv: APP_AML_MONGO_AUTHORIZATION_HEADER
+    APP_AML_MONGO_READ_URL:
+      fromEnv: APP_AML_MONGO_READ_URL
+    APP_AML_MONGO_WRITE_URL:
+      fromEnv: APP_AML_MONGO_WRITE_URL
+    APP_AML_PG_AUTHORIZATION_HEADER:
+      fromEnv: APP_AML_PG_AUTHORIZATION_HEADER
+    APP_AML_PG_READ_URL:
+      fromEnv: APP_AML_PG_READ_URL
+    APP_AML_PG_WRITE_URL:
+      fromEnv: APP_AML_PG_WRITE_URL
+  connectors:
+    - path: connector/aml_pg/connector.yaml
+      connectorLinkName: aml_pg
+    - path: connector/aml_mongo/connector.yaml
+      connectorLinkName: aml_mongo

@@ -1,0 +1,233 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: public_financial_transfers
+  description: Stores financial transaction records including AML related flags and currency details.
+  fields:
+    - name: amount
+      type: bigdecimal
+      description: Transaction amount in the original payment currency.
+    - name: date
+      type: date
+      description: Date of the transaction.
+    - name: is_laundering
+      type: boolean
+      description: Boolean flag indicating if the transaction is suspected of laundering activity (true/false).
+    - name: laundering_type
+      type: string
+      description: Type of laundering behavior detected (e.g., structuring, layering).
+    - name: payment_currency
+      type: string
+      description: Currency used by the sender for the payment.
+    - name: payment_type
+      type: string
+      description: Type of transaction (e.g., wire, ACH, cash).
+    - name: received_currency
+      type: string
+      description: Currency received by the beneficiary.
+    - name: receiver_account
+      type: int32
+      description: Bank account number of the receiver.
+    - name: receiver_bank_location
+      type: string
+      description: Geographical location of the receivers bank.
+    - name: sender_account
+      type: int32
+      description: Bank account number of the sender.
+    - name: sender_bank_location
+      type: string
+      description: Geographical location of the senders bank.
+    - name: time
+      type: string
+      description: Time of transaction (HH:MM:SS format).
+    - name: transaction_id
+      type: int32!
+      description: Unique identifier for the transaction.
+  graphql:
+    typeName: public_financial_transfers
+    inputTypeName: public_financial_transfers_input
+  dataConnectorTypeMapping:
+    - dataConnectorName: aml_pg
+      dataConnectorObjectType: public.financial_transfers
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: public_financial_transfers
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - amount
+          - date
+          - is_laundering
+          - laundering_type
+          - payment_currency
+          - payment_type
+          - received_currency
+          - receiver_account
+          - receiver_bank_location
+          - sender_account
+          - sender_bank_location
+          - time
+          - transaction_id
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: public_financial_transfers_bool_exp
+  operand:
+    object:
+      type: public_financial_transfers
+      comparableFields:
+        - fieldName: amount
+          booleanExpressionType: numeric_bool_exp
+        - fieldName: date
+          booleanExpressionType: date_bool_exp
+        - fieldName: is_laundering
+          booleanExpressionType: boolean_bool_exp
+        - fieldName: laundering_type
+          booleanExpressionType: character_varying_bool_exp
+        - fieldName: payment_currency
+          booleanExpressionType: character_varying_bool_exp
+        - fieldName: payment_type
+          booleanExpressionType: character_varying_bool_exp
+        - fieldName: received_currency
+          booleanExpressionType: character_varying_bool_exp
+        - fieldName: receiver_account
+          booleanExpressionType: integer_bool_exp
+        - fieldName: receiver_bank_location
+          booleanExpressionType: character_varying_bool_exp
+        - fieldName: sender_account
+          booleanExpressionType: integer_bool_exp
+        - fieldName: sender_bank_location
+          booleanExpressionType: character_varying_bool_exp
+        - fieldName: time
+          booleanExpressionType: character_varying_bool_exp
+        - fieldName: transaction_id
+          booleanExpressionType: integer_bool_exp
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: public_financial_transfers_bool_exp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: public_financial_transfers_agg_exp
+  operand:
+    object:
+      aggregatedType: public_financial_transfers
+      aggregatableFields:
+        - fieldName: amount
+          aggregateExpression: numeric_agg_exp
+        - fieldName: date
+          aggregateExpression: date_agg_exp
+        - fieldName: is_laundering
+          aggregateExpression: boolean_agg_exp
+        - fieldName: laundering_type
+          aggregateExpression: character_varying_agg_exp
+        - fieldName: payment_currency
+          aggregateExpression: character_varying_agg_exp
+        - fieldName: payment_type
+          aggregateExpression: character_varying_agg_exp
+        - fieldName: received_currency
+          aggregateExpression: character_varying_agg_exp
+        - fieldName: receiver_account
+          aggregateExpression: integer_agg_exp
+        - fieldName: receiver_bank_location
+          aggregateExpression: character_varying_agg_exp
+        - fieldName: sender_account
+          aggregateExpression: integer_agg_exp
+        - fieldName: sender_bank_location
+          aggregateExpression: character_varying_agg_exp
+        - fieldName: time
+          aggregateExpression: character_varying_agg_exp
+        - fieldName: transaction_id
+          aggregateExpression: integer_agg_exp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: public_financial_transfers_agg_exp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: public_financial_transfers_order_by_exp
+  operand:
+    object:
+      orderedType: public_financial_transfers
+      orderableFields:
+        - fieldName: amount
+          orderByExpression: bigdecimal_order_by_exp
+        - fieldName: date
+          orderByExpression: date_order_by_exp
+        - fieldName: is_laundering
+          orderByExpression: boolean_order_by_exp
+        - fieldName: laundering_type
+          orderByExpression: string_order_by_exp
+        - fieldName: payment_currency
+          orderByExpression: string_order_by_exp
+        - fieldName: payment_type
+          orderByExpression: string_order_by_exp
+        - fieldName: received_currency
+          orderByExpression: string_order_by_exp
+        - fieldName: receiver_account
+          orderByExpression: int32_order_by_exp
+        - fieldName: receiver_bank_location
+          orderByExpression: string_order_by_exp
+        - fieldName: sender_account
+          orderByExpression: int32_order_by_exp
+        - fieldName: sender_bank_location
+          orderByExpression: string_order_by_exp
+        - fieldName: time
+          orderByExpression: string_order_by_exp
+        - fieldName: transaction_id
+          orderByExpression: int32_order_by_exp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: public_financial_transfers_order_by_exp
+
+---
+kind: Model
+version: v2
+definition:
+  name: public_financial_transfers
+  objectType: public_financial_transfers
+  source:
+    dataConnectorName: aml_pg
+    collection: public.financial_transfers
+  filterExpressionType: public_financial_transfers_bool_exp
+  aggregateExpression: public_financial_transfers_agg_exp
+  orderByExpression: public_financial_transfers_order_by_exp
+  graphql:
+    selectMany:
+      queryRootField: public_financial_transfers
+      subscription:
+        rootField: public_financial_transfers
+    selectUniques: []
+    filterInputTypeName: public_financial_transfers_filter_input
+    aggregate:
+      queryRootField: public_financial_transfers_aggregate
+      subscription:
+        rootField: public_financial_transfers_aggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: public_financial_transfers
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+
