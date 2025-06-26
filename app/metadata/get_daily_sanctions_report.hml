@@ -1,0 +1,70 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: get_daily_sanctions_report
+  fields:
+    - name: message
+      type: String!
+    - name: report_data
+      type: json
+    - name: slack_message_ts
+      type: String
+    - name: success
+      type: Boolean!
+  graphql:
+    typeName: get_daily_sanctions_report
+    inputTypeName: get_daily_sanctions_report_input
+  dataConnectorTypeMapping:
+    - dataConnectorName: compliance_digest
+      dataConnectorObjectType: get_daily_sanctions_report
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: get_daily_sanctions_report
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - message
+          - report_data
+          - slack_message_ts
+          - success
+
+---
+kind: Command
+version: v1
+definition:
+  name: get_daily_sanctions_report
+  outputType: get_daily_sanctions_report!
+  arguments:
+    - name: lookback_days
+      type: Int!
+    - name: min_transfer_amount
+      type: Float!
+  source:
+    dataConnectorName: compliance_digest
+    dataConnectorCommand:
+      function: get_daily_sanctions_report
+  graphql:
+    rootFieldName: get_daily_sanctions_report
+    rootFieldKind: Query
+  description: >-
+    Runs the daily sanctions transfer report automation in PromptQL.
+        Returns the report data without posting to Slack.
+        
+        Args:
+            lookback_days: Number of days to look back for transfers (default: 91)
+            min_transfer_amount: Minimum transfer amount to include (default: 46.0)
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: get_daily_sanctions_report
+  permissions:
+    - role: admin
+      allowExecution: true
+

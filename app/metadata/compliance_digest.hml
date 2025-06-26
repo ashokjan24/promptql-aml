@@ -1,0 +1,216 @@
+kind: DataConnectorLink
+version: v1
+definition:
+  name: compliance_digest
+  url:
+    readWriteUrls:
+      read:
+        valueFromEnv: APP_COMPLIANCE_DIGEST_READ_URL
+      write:
+        valueFromEnv: APP_COMPLIANCE_DIGEST_WRITE_URL
+  headers:
+    Authorization:
+      valueFromEnv: APP_COMPLIANCE_DIGEST_AUTHORIZATION_HEADER
+  schema:
+    version: v0.1
+    schema:
+      scalar_types:
+        Boolean:
+          representation:
+            type: boolean
+          aggregate_functions: {}
+          comparison_operators: {}
+        Float:
+          representation:
+            type: float64
+          aggregate_functions: {}
+          comparison_operators: {}
+        HeaderMap:
+          representation:
+            type: json
+          aggregate_functions: {}
+          comparison_operators: {}
+        Int:
+          representation:
+            type: integer
+          aggregate_functions: {}
+          comparison_operators: {}
+        Json:
+          representation:
+            type: json
+          aggregate_functions: {}
+          comparison_operators: {}
+        String:
+          representation:
+            type: string
+          aggregate_functions: {}
+          comparison_operators: {}
+      object_types:
+        get_daily_sanctions_report:
+          fields:
+            message:
+              type:
+                name: String
+                type: named
+            report_data:
+              type:
+                type: nullable
+                underlying_type:
+                  name: Json
+                  type: named
+            slack_message_ts:
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            success:
+              type:
+                name: Boolean
+                type: named
+        post_sanctions_report_to_slack:
+          fields:
+            channel:
+              type:
+                name: String
+                type: named
+            message:
+              type:
+                name: String
+                type: named
+            success:
+              type:
+                name: Boolean
+                type: named
+            timestamp:
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+        run_sanctions_report_with_custom_params:
+          fields:
+            message:
+              type:
+                name: String
+                type: named
+            report_data:
+              type:
+                type: nullable
+                underlying_type:
+                  name: Json
+                  type: named
+            slack_message_ts:
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            success:
+              type:
+                name: Boolean
+                type: named
+        schedule_daily_sanctions_report:
+          fields:
+            message:
+              type:
+                name: String
+                type: named
+            report_data:
+              type:
+                type: nullable
+                underlying_type:
+                  name: Json
+                  type: named
+            slack_message_ts:
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            success:
+              type:
+                name: Boolean
+                type: named
+      collections: []
+      functions:
+        - name: get_daily_sanctions_report
+          description: "Runs the daily sanctions transfer report automation in PromptQL.\n    Returns the report data without posting to Slack.\n    \n    Args:\n        lookback_days: Number of days to look back for transfers (default: 91)\n        min_transfer_amount: Minimum transfer amount to include (default: 46.0)"
+          arguments:
+            lookback_days:
+              type:
+                name: Int
+                type: named
+            min_transfer_amount:
+              type:
+                name: Float
+                type: named
+          result_type:
+            name: get_daily_sanctions_report
+            type: named
+      procedures:
+        - name: post_sanctions_report_to_slack
+          description: "Runs the daily sanctions transfer report and posts results to the HoundQL Slack channel.\n    This is a mutation because it has side effects (running automation and posting to Slack).\n    \n    Args:\n        lookback_days: Number of days to look back for transfers (default: 91)\n        min_transfer_amount: Minimum transfer amount to include (default: 46.0)\n        custom_message: Optional custom message to include with the report"
+          arguments:
+            custom_message:
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
+            lookback_days:
+              type:
+                name: Int
+                type: named
+            min_transfer_amount:
+              type:
+                name: Float
+                type: named
+          result_type:
+            name: post_sanctions_report_to_slack
+            type: named
+        - name: run_sanctions_report_with_custom_params
+          description: "Runs the sanctions transfer report with custom parameters.\n    Optionally posts to Slack based on the post_to_slack parameter.\n    \n    Args:\n        lookback_days: Number of days to look back for transfers\n        min_transfer_amount: Minimum transfer amount to include\n        post_to_slack: Whether to post results to Slack (default: True)"
+          arguments:
+            lookback_days:
+              type:
+                name: Int
+                type: named
+            min_transfer_amount:
+              type:
+                name: Float
+                type: named
+            post_to_slack:
+              type:
+                name: Boolean
+                type: named
+          result_type:
+            name: run_sanctions_report_with_custom_params
+            type: named
+        - name: schedule_daily_sanctions_report
+          description: "Schedules the daily sanctions transfer report to be sent at a specific time.\n    This is a placeholder - actual scheduling would depend on your infrastructure.\n    \n    Args:\n        time: Time to send report (HH:MM format, UTC)\n        lookback_days: Number of days to look back for transfers\n        min_transfer_amount: Minimum transfer amount to include"
+          arguments:
+            lookback_days:
+              type:
+                name: Int
+                type: named
+            min_transfer_amount:
+              type:
+                name: Float
+                type: named
+            time:
+              type:
+                name: String
+                type: named
+          result_type:
+            name: schedule_daily_sanctions_report
+            type: named
+    capabilities:
+      version: 0.1.6
+      capabilities:
+        query:
+          aggregates: {}
+          variables: {}
+          explain: {}
+        mutation:
+          transactional: {}

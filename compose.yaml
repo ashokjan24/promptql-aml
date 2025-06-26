@@ -1,6 +1,7 @@
 include:
   - path: app/connector/aml_pg/compose.yaml
   - path: app/connector/aml_mongo/compose.yaml
+  - path: app/connector/compliance_digest/compose.yaml
 services:
   engine:
     build:
@@ -32,18 +33,17 @@ services:
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
   promptql-playground:
-    image: us-east4-docker.pkg.dev/promptql-execution-service/promptql-public/promptql-playground-local:latest
     environment:
       CORS_ORIGINS: ${CORS_ORIGINS:-https://console.hasura.io,https://promptql.console.hasura.io}
       DDN_URL: ${HASURA_DDN_URL:-http://engine:3000/v1/sql}
+      HASURA_DDN_PAT: ${HASURA_DDN_PAT}
       HASURA_LLM_URI: ${HASURA_LLM_URI:-https://llm.promptql.pro.hasura.io}
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://local.hasura.dev:4317}
       PROMPTQL_SECRET_KEY: ${PROMPTQL_SECRET_KEY}
       PROMPTQL_URI: ${PROMPTQL_URI:-wss://runtime.promptql.pro.hasura.io}
-      HASURA_DDN_PAT: ${HASURA_DDN_PAT}
     extra_hosts:
       - local.hasura.dev:host-gateway
-
+    image: us-east4-docker.pkg.dev/promptql-execution-service/promptql-public/promptql-playground-local:latest
     labels:
       io.hasura.ddn.service-name: promptql-playground
     ports:

@@ -1,0 +1,73 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: run_sanctions_report_with_custom_params
+  fields:
+    - name: message
+      type: String!
+    - name: report_data
+      type: json
+    - name: slack_message_ts
+      type: String
+    - name: success
+      type: Boolean!
+  graphql:
+    typeName: run_sanctions_report_with_custom_params
+    inputTypeName: run_sanctions_report_with_custom_params_input
+  dataConnectorTypeMapping:
+    - dataConnectorName: compliance_digest
+      dataConnectorObjectType: run_sanctions_report_with_custom_params
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: run_sanctions_report_with_custom_params
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - message
+          - report_data
+          - slack_message_ts
+          - success
+
+---
+kind: Command
+version: v1
+definition:
+  name: run_sanctions_report_with_custom_params
+  outputType: run_sanctions_report_with_custom_params!
+  arguments:
+    - name: lookback_days
+      type: Int!
+    - name: min_transfer_amount
+      type: Float!
+    - name: post_to_slack
+      type: Boolean!
+  source:
+    dataConnectorName: compliance_digest
+    dataConnectorCommand:
+      procedure: run_sanctions_report_with_custom_params
+  graphql:
+    rootFieldName: run_sanctions_report_with_custom_params
+    rootFieldKind: Mutation
+  description: |-
+    Runs the sanctions transfer report with custom parameters.
+        Optionally posts to Slack based on the post_to_slack parameter.
+        
+        Args:
+            lookback_days: Number of days to look back for transfers
+            min_transfer_amount: Minimum transfer amount to include
+            post_to_slack: Whether to post results to Slack (default: True)
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: run_sanctions_report_with_custom_params
+  permissions:
+    - role: admin
+      allowExecution: true
+

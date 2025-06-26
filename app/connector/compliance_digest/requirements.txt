@@ -1,0 +1,4 @@
+hasura-ndc==0.38
+pydantic
+requests
+python-dateutil

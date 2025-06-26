@@ -1,0 +1,73 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: schedule_daily_sanctions_report
+  fields:
+    - name: message
+      type: String!
+    - name: report_data
+      type: json
+    - name: slack_message_ts
+      type: String
+    - name: success
+      type: Boolean!
+  graphql:
+    typeName: schedule_daily_sanctions_report
+    inputTypeName: schedule_daily_sanctions_report_input
+  dataConnectorTypeMapping:
+    - dataConnectorName: compliance_digest
+      dataConnectorObjectType: schedule_daily_sanctions_report
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: schedule_daily_sanctions_report
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - message
+          - report_data
+          - slack_message_ts
+          - success
+
+---
+kind: Command
+version: v1
+definition:
+  name: schedule_daily_sanctions_report
+  outputType: schedule_daily_sanctions_report!
+  arguments:
+    - name: lookback_days
+      type: Int!
+    - name: min_transfer_amount
+      type: Float!
+    - name: time
+      type: String!
+  source:
+    dataConnectorName: compliance_digest
+    dataConnectorCommand:
+      procedure: schedule_daily_sanctions_report
+  graphql:
+    rootFieldName: schedule_daily_sanctions_report
+    rootFieldKind: Mutation
+  description: >-
+    Schedules the daily sanctions transfer report to be sent at a specific time.
+        This is a placeholder - actual scheduling would depend on your infrastructure.
+        
+        Args:
+            time: Time to send report (HH:MM format, UTC)
+            lookback_days: Number of days to look back for transfers
+            min_transfer_amount: Minimum transfer amount to include
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: schedule_daily_sanctions_report
+  permissions:
+    - role: admin
+      allowExecution: true
+

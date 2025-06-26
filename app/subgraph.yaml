@@ -20,8 +20,16 @@ definition:
       fromEnv: APP_AML_PG_READ_URL
     APP_AML_PG_WRITE_URL:
       fromEnv: APP_AML_PG_WRITE_URL
+    APP_COMPLIANCE_DIGEST_AUTHORIZATION_HEADER:
+      fromEnv: APP_COMPLIANCE_DIGEST_AUTHORIZATION_HEADER
+    APP_COMPLIANCE_DIGEST_READ_URL:
+      fromEnv: APP_COMPLIANCE_DIGEST_READ_URL
+    APP_COMPLIANCE_DIGEST_WRITE_URL:
+      fromEnv: APP_COMPLIANCE_DIGEST_WRITE_URL
   connectors:
     - path: connector/aml_pg/connector.yaml
       connectorLinkName: aml_pg
     - path: connector/aml_mongo/connector.yaml
       connectorLinkName: aml_mongo
+    - path: connector/compliance_digest/connector.yaml
+      connectorLinkName: compliance_digest

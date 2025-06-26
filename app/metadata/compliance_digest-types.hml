@@ -1,0 +1,78 @@
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: compliance_digest
+  dataConnectorScalarType: Int
+  representation: Int
+  graphql:
+    comparisonExpressionTypeName: Int_comparison_exp_1
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: compliance_digest
+  dataConnectorScalarType: Float
+  representation: Float
+  graphql:
+    comparisonExpressionTypeName: Float_comparison_exp
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: compliance_digest
+  dataConnectorScalarType: String
+  representation: String
+  graphql:
+    comparisonExpressionTypeName: String_comparison_exp_1
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: json
+  graphql:
+    typeName: json
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: Json_bool_exp
+  operand:
+    scalar:
+      type: json
+      comparisonOperators: []
+      dataConnectorOperatorMapping:
+        - dataConnectorName: compliance_digest
+          dataConnectorScalarType: Json
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Json_bool_exp
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: compliance_digest
+  dataConnectorScalarType: Json
+  representation: json
+  graphql:
+    comparisonExpressionTypeName: json_comparison_exp
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: compliance_digest
+  dataConnectorScalarType: Boolean
+  representation: Boolean
+  graphql:
+    comparisonExpressionTypeName: Boolean_comparison_exp
+
