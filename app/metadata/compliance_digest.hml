@@ -46,7 +46,7 @@ definition:
           aggregate_functions: {}
           comparison_operators: {}
       object_types:
-        get_daily_sanctions_report:
+        get_daily_sanctions_report_v2:
           fields:
             message:
               type:
@@ -68,7 +68,7 @@ definition:
               type:
                 name: Boolean
                 type: named
-        post_sanctions_report_to_slack:
+        post_sanctions_report_v2_to_slack:
           fields:
             channel:
               type:
@@ -88,7 +88,7 @@ definition:
                 underlying_type:
                   name: String
                   type: named
-        run_sanctions_report_with_custom_params:
+        run_sanctions_report_with_custom_date:
           fields:
             message:
               type:
@@ -110,7 +110,7 @@ definition:
               type:
                 name: Boolean
                 type: named
-        schedule_daily_sanctions_report:
+        schedule_daily_sanctions_report_v2:
           fields:
             message:
               type:
@@ -134,23 +134,21 @@ definition:
                 type: named
       collections: []
       functions:
-        - name: get_daily_sanctions_report
-          description: "Runs the daily sanctions transfer report automation in PromptQL.\n    Returns the report data without posting to Slack.\n    \n    Args:\n        lookback_days: Number of days to look back for transfers (default: 91)\n        min_transfer_amount: Minimum transfer amount to include (default: 46.0)"
+        - name: get_daily_sanctions_report_v2
+          description: "Runs the daily sanctions report v2 automation in PromptQL.\n    Uses a specific report date instead of lookback days.\n    \n    Args:\n        report_date: Specific date for the report (YYYY-MM-DD format). Defaults to yesterday."
           arguments:
-            lookback_days:
+            report_date:
               type:
-                name: Int
-                type: named
-            min_transfer_amount:
-              type:
-                name: Float
-                type: named
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
           result_type:
-            name: get_daily_sanctions_report
+            name: get_daily_sanctions_report_v2
             type: named
       procedures:
-        - name: post_sanctions_report_to_slack
-          description: "Runs the daily sanctions transfer report and posts results to the HoundQL Slack channel.\n    This is a mutation because it has side effects (running automation and posting to Slack).\n    \n    Args:\n        lookback_days: Number of days to look back for transfers (default: 91)\n        min_transfer_amount: Minimum transfer amount to include (default: 46.0)\n        custom_message: Optional custom message to include with the report"
+        - name: post_sanctions_report_v2_to_slack
+          description: "Runs the daily sanctions report v2 and posts results to the HoundQL Slack channel.\n    \n    Args:\n        report_date: Specific date for the report (YYYY-MM-DD). Defaults to yesterday.\n        custom_message: Optional custom message to include with the report"
           arguments:
             custom_message:
               type:
@@ -158,52 +156,44 @@ definition:
                 underlying_type:
                   name: String
                   type: named
-            lookback_days:
+            report_date:
               type:
-                name: Int
-                type: named
-            min_transfer_amount:
-              type:
-                name: Float
-                type: named
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
           result_type:
-            name: post_sanctions_report_to_slack
+            name: post_sanctions_report_v2_to_slack
             type: named
-        - name: run_sanctions_report_with_custom_params
-          description: "Runs the sanctions transfer report with custom parameters.\n    Optionally posts to Slack based on the post_to_slack parameter.\n    \n    Args:\n        lookback_days: Number of days to look back for transfers\n        min_transfer_amount: Minimum transfer amount to include\n        post_to_slack: Whether to post results to Slack (default: True)"
+        - name: run_sanctions_report_with_custom_date
+          description: "Runs the sanctions report v2 with a custom date.\n    Optionally posts to Slack based on the post_to_slack parameter.\n    \n    Args:\n        report_date: Specific date for the report (YYYY-MM-DD). Defaults to yesterday.\n        post_to_slack: Whether to post results to Slack (default: True)"
           arguments:
-            lookback_days:
-              type:
-                name: Int
-                type: named
-            min_transfer_amount:
-              type:
-                name: Float
-                type: named
             post_to_slack:
               type:
                 name: Boolean
                 type: named
+            report_date:
+              type:
+                type: nullable
+                underlying_type:
+                  name: String
+                  type: named
           result_type:
-            name: run_sanctions_report_with_custom_params
+            name: run_sanctions_report_with_custom_date
             type: named
-        - name: schedule_daily_sanctions_report
-          description: "Schedules the daily sanctions transfer report to be sent at a specific time.\n    This is a placeholder - actual scheduling would depend on your infrastructure.\n    \n    Args:\n        time: Time to send report (HH:MM format, UTC)\n        lookback_days: Number of days to look back for transfers\n        min_transfer_amount: Minimum transfer amount to include"
+        - name: schedule_daily_sanctions_report_v2
+          description: "Schedules the daily sanctions report v2 to be sent at a specific time.\n    This is a placeholder - actual scheduling would depend on your infrastructure.\n    \n    Args:\n        time: Time to send report (HH:MM format, UTC)\n        default_date_offset: How many days back from current date to report on (default: 1 for yesterday)"
           arguments:
-            lookback_days:
+            default_date_offset:
               type:
                 name: Int
-                type: named
-            min_transfer_amount:
-              type:
-                name: Float
                 type: named
             time:
               type:
                 name: String
                 type: named
           result_type:
-            name: schedule_daily_sanctions_report
+            name: schedule_daily_sanctions_report_v2
             type: named
     capabilities:
       version: 0.1.6

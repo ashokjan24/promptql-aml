@@ -2,7 +2,7 @@
 kind: ObjectType
 version: v1
 definition:
-  name: post_sanctions_report_to_slack
+  name: post_sanctions_report_v2_to_slack
   fields:
     - name: channel
       type: String!
@@ -13,17 +13,17 @@ definition:
     - name: timestamp
       type: String
   graphql:
-    typeName: post_sanctions_report_to_slack
-    inputTypeName: post_sanctions_report_to_slack_input
+    typeName: post_sanctions_report_v2_to_slack
+    inputTypeName: post_sanctions_report_v2_to_slack_input
   dataConnectorTypeMapping:
     - dataConnectorName: compliance_digest
-      dataConnectorObjectType: post_sanctions_report_to_slack
+      dataConnectorObjectType: post_sanctions_report_v2_to_slack
 
 ---
 kind: TypePermissions
 version: v1
 definition:
-  typeName: post_sanctions_report_to_slack
+  typeName: post_sanctions_report_v2_to_slack
   permissions:
     - role: admin
       output:
@@ -37,37 +37,33 @@ definition:
 kind: Command
 version: v1
 definition:
-  name: post_sanctions_report_to_slack
-  outputType: post_sanctions_report_to_slack!
+  name: post_sanctions_report_v2_to_slack
+  outputType: post_sanctions_report_v2_to_slack!
   arguments:
     - name: custom_message
       type: String
-    - name: lookback_days
-      type: Int!
-    - name: min_transfer_amount
-      type: Float!
+    - name: report_date
+      type: String
   source:
     dataConnectorName: compliance_digest
     dataConnectorCommand:
-      procedure: post_sanctions_report_to_slack
+      procedure: post_sanctions_report_v2_to_slack
   graphql:
-    rootFieldName: post_sanctions_report_to_slack
+    rootFieldName: post_sanctions_report_v2_to_slack
     rootFieldKind: Mutation
   description: >-
-    Runs the daily sanctions transfer report and posts results to the HoundQL
-    Slack channel.
-        This is a mutation because it has side effects (running automation and posting to Slack).
+    Runs the daily sanctions report v2 and posts results to the HoundQL Slack
+    channel.
         
         Args:
-            lookback_days: Number of days to look back for transfers (default: 91)
-            min_transfer_amount: Minimum transfer amount to include (default: 46.0)
+            report_date: Specific date for the report (YYYY-MM-DD). Defaults to yesterday.
             custom_message: Optional custom message to include with the report
 
 ---
 kind: CommandPermissions
 version: v1
 definition:
-  commandName: post_sanctions_report_to_slack
+  commandName: post_sanctions_report_v2_to_slack
   permissions:
     - role: admin
       allowExecution: true

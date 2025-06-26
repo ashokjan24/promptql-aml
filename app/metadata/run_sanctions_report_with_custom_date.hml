@@ -2,7 +2,7 @@
 kind: ObjectType
 version: v1
 definition:
-  name: run_sanctions_report_with_custom_params
+  name: run_sanctions_report_with_custom_date
   fields:
     - name: message
       type: String!
@@ -13,17 +13,17 @@ definition:
     - name: success
       type: Boolean!
   graphql:
-    typeName: run_sanctions_report_with_custom_params
-    inputTypeName: run_sanctions_report_with_custom_params_input
+    typeName: run_sanctions_report_with_custom_date
+    inputTypeName: run_sanctions_report_with_custom_date_input
   dataConnectorTypeMapping:
     - dataConnectorName: compliance_digest
-      dataConnectorObjectType: run_sanctions_report_with_custom_params
+      dataConnectorObjectType: run_sanctions_report_with_custom_date
 
 ---
 kind: TypePermissions
 version: v1
 definition:
-  typeName: run_sanctions_report_with_custom_params
+  typeName: run_sanctions_report_with_custom_date
   permissions:
     - role: admin
       output:
@@ -37,36 +37,33 @@ definition:
 kind: Command
 version: v1
 definition:
-  name: run_sanctions_report_with_custom_params
-  outputType: run_sanctions_report_with_custom_params!
+  name: run_sanctions_report_with_custom_date
+  outputType: run_sanctions_report_with_custom_date!
   arguments:
-    - name: lookback_days
-      type: Int!
-    - name: min_transfer_amount
-      type: Float!
     - name: post_to_slack
       type: Boolean!
+    - name: report_date
+      type: String
   source:
     dataConnectorName: compliance_digest
     dataConnectorCommand:
-      procedure: run_sanctions_report_with_custom_params
+      procedure: run_sanctions_report_with_custom_date
   graphql:
-    rootFieldName: run_sanctions_report_with_custom_params
+    rootFieldName: run_sanctions_report_with_custom_date
     rootFieldKind: Mutation
-  description: |-
-    Runs the sanctions transfer report with custom parameters.
+  description: >-
+    Runs the sanctions report v2 with a custom date.
         Optionally posts to Slack based on the post_to_slack parameter.
         
         Args:
-            lookback_days: Number of days to look back for transfers
-            min_transfer_amount: Minimum transfer amount to include
+            report_date: Specific date for the report (YYYY-MM-DD). Defaults to yesterday.
             post_to_slack: Whether to post results to Slack (default: True)
 
 ---
 kind: CommandPermissions
 version: v1
 definition:
-  commandName: run_sanctions_report_with_custom_params
+  commandName: run_sanctions_report_with_custom_date
   permissions:
     - role: admin
       allowExecution: true

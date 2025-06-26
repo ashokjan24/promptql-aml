@@ -2,7 +2,7 @@
 kind: ObjectType
 version: v1
 definition:
-  name: get_daily_sanctions_report
+  name: get_daily_sanctions_report_v2
   fields:
     - name: message
       type: String!
@@ -13,17 +13,17 @@ definition:
     - name: success
       type: Boolean!
   graphql:
-    typeName: get_daily_sanctions_report
-    inputTypeName: get_daily_sanctions_report_input
+    typeName: get_daily_sanctions_report_v2
+    inputTypeName: get_daily_sanctions_report_v2_input
   dataConnectorTypeMapping:
     - dataConnectorName: compliance_digest
-      dataConnectorObjectType: get_daily_sanctions_report
+      dataConnectorObjectType: get_daily_sanctions_report_v2
 
 ---
 kind: TypePermissions
 version: v1
 definition:
-  typeName: get_daily_sanctions_report
+  typeName: get_daily_sanctions_report_v2
   permissions:
     - role: admin
       output:
@@ -37,33 +37,30 @@ definition:
 kind: Command
 version: v1
 definition:
-  name: get_daily_sanctions_report
-  outputType: get_daily_sanctions_report!
+  name: get_daily_sanctions_report_v2
+  outputType: get_daily_sanctions_report_v2!
   arguments:
-    - name: lookback_days
-      type: Int!
-    - name: min_transfer_amount
-      type: Float!
+    - name: report_date
+      type: String
   source:
     dataConnectorName: compliance_digest
     dataConnectorCommand:
-      function: get_daily_sanctions_report
+      function: get_daily_sanctions_report_v2
   graphql:
-    rootFieldName: get_daily_sanctions_report
+    rootFieldName: get_daily_sanctions_report_v2
     rootFieldKind: Query
   description: >-
-    Runs the daily sanctions transfer report automation in PromptQL.
-        Returns the report data without posting to Slack.
+    Runs the daily sanctions report v2 automation in PromptQL.
+        Uses a specific report date instead of lookback days.
         
         Args:
-            lookback_days: Number of days to look back for transfers (default: 91)
-            min_transfer_amount: Minimum transfer amount to include (default: 46.0)
+            report_date: Specific date for the report (YYYY-MM-DD format). Defaults to yesterday.
 
 ---
 kind: CommandPermissions
 version: v1
 definition:
-  commandName: get_daily_sanctions_report
+  commandName: get_daily_sanctions_report_v2
   permissions:
     - role: admin
       allowExecution: true

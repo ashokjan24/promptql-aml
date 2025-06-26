@@ -61,6 +61,33 @@ definition:
           - nationality
           - pep_status
           - risk_level
+    - role: compliance_officer
+      output:
+        allowedFields:
+          - account
+          - address
+          - blacklisted
+          - customer_id
+          - dob
+          - name
+          - nationality
+          - pep_status
+          - risk_level
+
+    - role: analyst
+      output:
+        allowedFields:
+          - account
+          - address
+          - customer_id
+          - dob
+          - name
+          - nationality
+    - role: user
+      output:
+        allowedFields:
+          - name
+          - nationality
 
 ---
 kind: BooleanExpressionType
@@ -194,4 +221,4 @@ definition:
       select:
         filter: null
         allowSubscriptions: true
-
+    
